@@ -1,5 +1,5 @@
 <?php
-$host = "YOUR_DB_PRIVATE_IP";  // replace later with private EC2 IP
+$host = "10.0.2.161";  // replace later with private EC2 IP
 $user = "root";
 $pass = "";
 $db = "microblog";
