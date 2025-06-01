@@ -94,7 +94,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      KeyName: your-keypair-name  # Replace this with your actual key pair name
+      KeyName: microblog-keypair  # Replace this with your actual key pair name
       ImageId: ami-0c02fb55956c7d316 # Amazon Linux 2 (update to match your region)
       SubnetId: !Ref PublicSubnet
       SecurityGroupIds:
@@ -107,7 +107,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      KeyName: your-keypair-name  # Same key used to SSH from public EC2
+      KeyName: microblog-keypair  # Same key used to SSH from public EC2
       ImageId: ami-0c02fb55956c7d316 # Amazon Linux 2
       SubnetId: !Ref PrivateSubnet
       SecurityGroupIds:
