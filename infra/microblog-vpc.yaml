@@ -2,6 +2,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: VPC Setup for Micro-Blog App (Public:Frontend, Private:MySQL)
 
 Resources:
+
   MicroBlogVPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -77,13 +78,43 @@ Resources:
   PrivateSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: MySQL Access from Public Subnet
+      GroupDescription: Allow MySQL and SSH from Public EC2
       VpcId: !Ref MicroBlogVPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
           SourceSecurityGroupId: !Ref PublicSecurityGroup
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          SourceSecurityGroupId: !Ref PublicSecurityGroup
+
+  PublicEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: your-keypair-name  # Replace this with your actual key pair name
+      ImageId: ami-0c02fb55956c7d316 # Amazon Linux 2 (update to match your region)
+      SubnetId: !Ref PublicSubnet
+      SecurityGroupIds:
+        - !Ref PublicSecurityGroup
+      Tags:
+        - Key: Name
+          Value: PublicEC2
+
+  PrivateEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: your-keypair-name  # Same key used to SSH from public EC2
+      ImageId: ami-0c02fb55956c7d316 # Amazon Linux 2
+      SubnetId: !Ref PrivateSubnet
+      SecurityGroupIds:
+        - !Ref PrivateSecurityGroup
+      Tags:
+        - Key: Name
+          Value: PrivateEC2
 
 Outputs:
   VPCID:
@@ -101,3 +132,9 @@ Outputs:
 
   PrivateSGID:
     Value: !Ref PrivateSecurityGroup
+
+  PublicInstanceID:
+    Value: !Ref PublicEC2Instance
+
+  PrivateInstanceID:
+    Value: !Ref PrivateEC2Instance
